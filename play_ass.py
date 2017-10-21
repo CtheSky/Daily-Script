@@ -29,24 +29,65 @@ def get_events(filename):
 
 
 def display_events(events):
+    import sys
+    write, flush = sys.stdout.write, sys.stdout.flush
+
     import time
-
-    def to_seconds(timestr):
-        ftr = [3600, 60, 1]
-        return sum([a * b for a, b in zip(ftr, map(float, timestr.split(':')))])
-
     begin_time = time.time()
-    for start, end, text in events:
+    msg, back_len = '', 0
 
-        while time.time() < begin_time + to_seconds(start):
-            time.sleep(0.01)
-        print(text)
+    def update_msg(text):
+        nonlocal msg
+        seconds = time.time() - begin_time
+        m, s = divmod(seconds, 60)
+        h, m = divmod(m, 60)
+        time_str = "%d:%02d:%02d" % (h, m, s)
+        msg = ' '.join([time_str, text])
 
-        while time.time() < begin_time + to_seconds(end):
-            time.sleep(0.01)
-        print()
+    def flush_msg():
+        nonlocal back_len
+        write('\x08' * back_len + ' ' * back_len)
+        write('\x08' * back_len + msg)
+        flush()
+        back_len = len(msg.encode('utf-8'))
+
+    def to_seconds(time_str):
+        ftr = [3600, 60, 1]
+        return sum([a * b for a, b in zip(ftr, map(float, time_str.split(':')))])
+
+    i = 0
+    while i < len(events):
+        start, end, text = events[i]
+        if time.time() < begin_time + to_seconds(start):
+            update_msg('')
+        elif time.time() < begin_time + to_seconds(end):
+            update_msg(text)
+        else:
+            i += 1
+
+        flush_msg()
+        time.sleep(0.01)
+
+
+def five_seconds_to_prepare():
+    import time
+    for i in range(5, 0, -1):
+        msg = '%d seconds to start.' % i
+        print(msg, end='', flush=True)
+        time.sleep(1)
+        print('\r' + ' ' * len(msg) + '\r', end='', flush=True)
+
+
+def main():
+    import argparse
+    parser = argparse.ArgumentParser('Display .ass format subtitle file.')
+    parser.add_argument('filename', help='path to .ass file')
+    args = parser.parse_args()
+
+    events = get_events(filename=args.filename)
+    five_seconds_to_prepare()
+    display_events(events)
 
 
 if __name__ == '__main__':
-    events = get_events('sc.ass')
-    display_events(events)
+    main()
