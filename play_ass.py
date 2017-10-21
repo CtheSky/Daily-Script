@@ -28,7 +28,7 @@ def get_events(filename):
         return events
 
 
-def display_events(events):
+def display_events(events, shift):
     import sys
     write, flush = sys.stdout.write, sys.stdout.flush
 
@@ -55,6 +55,9 @@ def display_events(events):
         ftr = [3600, 60, 1]
         return sum([a * b for a, b in zip(ftr, map(float, time_str.split(':')))])
 
+    if shift:
+        begin_time -= to_seconds(shift)
+
     i = 0
     while i < len(events):
         start, end, text = events[i]
@@ -69,9 +72,9 @@ def display_events(events):
         time.sleep(0.01)
 
 
-def five_seconds_to_prepare():
+def n_seconds_to_prepare(n):
     import time
-    for i in range(5, 0, -1):
+    for i in range(n, 0, -1):
         msg = '%d seconds to start.' % i
         print(msg, end='', flush=True)
         time.sleep(1)
@@ -80,13 +83,20 @@ def five_seconds_to_prepare():
 
 def main():
     import argparse
+
     parser = argparse.ArgumentParser('Display .ass format subtitle file.')
     parser.add_argument('filename', help='path to .ass file')
-    args = parser.parse_args()
+    parser.add_argument('-n', default=5, help='N seconds to wait before display')
+    parser.add_argument('-t', '--time', default='', help='when to start, format is "hh:mm:ss"')
 
-    events = get_events(filename=args.filename)
-    five_seconds_to_prepare()
-    display_events(events)
+    args = parser.parse_args()
+    filename = args.filename
+    n = int(args.n)
+    t = args.time
+
+    events = get_events(filename=filename)
+    n_seconds_to_prepare(n)
+    display_events(events, shift=t)
 
 
 if __name__ == '__main__':
