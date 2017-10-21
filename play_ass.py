@@ -1,4 +1,5 @@
 def get_events(filename):
+    """parse .ass file, return a list of (start, end, text)"""
     with open(filename) as f:
         ass = f.read()
 
@@ -29,6 +30,7 @@ def get_events(filename):
 
 
 def display_events(events, shift):
+    """display the text according to its start and end time, time starts at 'shift'"""
     import sys
     write, flush = sys.stdout.write, sys.stdout.flush
 
@@ -73,6 +75,7 @@ def display_events(events, shift):
 
 
 def n_seconds_to_prepare(n):
+    """provide a n seconds delay for manually syncing the video"""
     import time
     for i in range(n, 0, -1):
         msg = '%d seconds to start.' % i
