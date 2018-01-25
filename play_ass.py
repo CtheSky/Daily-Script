@@ -1,4 +1,12 @@
 def get_events(filename):
+    """delegate parse job according to file type and return a list of (start, end, text) """
+    if '.ass' in filename:
+        return parse_ass(filename)
+    elif '.srt' in filename:
+        return parse_rst(filename)
+
+
+def parse_ass(filename):
     """parse .ass file, return a list of (start, end, text)"""
     with open(filename) as f:
         ass = f.read()
@@ -25,6 +33,33 @@ def get_events(filename):
             layer, start, end, effect, text = extract(line)
             if layer == '0' and not effect:
                 events.append((start, end, text))
+
+        return events
+
+
+def parse_rst(filname):
+    """parse .rst file, return a list of (start, end, text)"""
+    with open(filname) as f:
+        events = []
+
+        lines = [line.strip() for line in f.readlines()]
+        i = 0
+        while i < len(lines):
+            idx = lines[i]
+            i += 1
+
+            start, _, end = lines[i].split()
+            start = start.replace(',', '.')
+            end = end.replace(',', '.')
+            i += 1
+
+            text = ''
+            while lines[i]:
+                text += lines[i]
+                i += 1
+            i += 1
+
+            events.append((start, end, text))
 
         return events
 
