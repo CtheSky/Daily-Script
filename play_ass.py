@@ -4,6 +4,8 @@ def get_events(filename):
         return parse_ass(filename)
     elif '.srt' in filename:
         return parse_rst(filename)
+    elif '.vtt' in filename:
+        return parse_vtt(filename)
 
 
 def parse_ass(filename):
@@ -37,9 +39,9 @@ def parse_ass(filename):
         return events
 
 
-def parse_rst(filname):
+def parse_rst(filename):
     """parse .rst file, return a list of (start, end, text)"""
-    with open(filname) as f:
+    with open(filename) as f:
         events = []
 
         lines = [line.strip() for line in f.readlines()]
@@ -54,7 +56,7 @@ def parse_rst(filname):
             i += 1
 
             text = ''
-            while lines[i]:
+            while i < len(lines) and lines[i]:
                 text += lines[i]
                 i += 1
             i += 1
@@ -63,6 +65,34 @@ def parse_rst(filname):
 
         return events
 
+
+def parse_vtt(filename):
+    """parse .vtt file, return a list of (start, end, text)"""
+    with open(filename) as f:
+        events = []
+
+        f.readline()
+        f.readline()
+        lines = [line.strip() for line in f.readlines()]
+        i = 0
+        while i < len(lines):
+            idx = lines[i]
+            i += 1
+
+            start, _, end = lines[i].split()
+            start = start.replace(',', '.')
+            end = end.replace(',', '.')
+            i += 1
+
+            text = ''
+            while i < len(lines) and lines[i]:
+                text += lines[i]
+                i += 1
+            i += 1
+
+            events.append((start, end, text))
+
+        return events
 
 def display_events(events, shift):
     """display the text according to its start and end time, time starts at 'shift'"""
