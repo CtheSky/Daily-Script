@@ -1,9 +1,9 @@
 # Daily-Script
 Scripts that make my life easier.
 
-### play_ass.py
-Play `.ass` format subtitle file in command line. Sometimes I want to watch video online but there's no suppport for loading 
-subtitle file. Made a simple one so I don't have to download video.
+### play_subtitle.py
+Play `ass`, `webvtt` and `srt` format subtitle file in command line. Sometimes I want to watch video online but there's no suppport for loading 
+subtitle file. Made a simple one so I don't have to download video. 
 ```shell
 > python play_ass.py -h
 usage: Display .ass format subtitle file. [-h] [-n N] [-t TIME] filename
