@@ -30,3 +30,15 @@ optional arguments:
   -d DEV, -dev DEV     Device number of USB port
   -n NAME, -name NAME  Device name
 ```
+
+### wol.py
+Send a [WOL](https://en.wikipedia.org/wiki/Wake-on-LAN)(Wake-on-LAN) packet to a given MAC address. Used to start my PC remotely.
+```bash
+usage: Send WOL magic packet to MAC [-h] mac
+
+positional arguments:
+  mac         MAC address to send magic packet
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
