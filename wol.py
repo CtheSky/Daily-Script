@@ -1,11 +1,25 @@
+"""
+Send magic packet for wol (wake-on-lane) to given mac address
+See more here: https://en.wikipedia.org/wiki/Wake-on-LAN
+>>> send_packet('5e:00:70:22:68:00')
+
+Command line interface:
+> python wol.py -h
+usage: Send WOL magic packet to MAC [-h] mac
+
+positional arguments:
+  mac         MAC address to send magic packet
+
+optional arguments:
+  -h, --help  show this help message and exit
+> python wol.py 5e:00:70:22:68:00
+"""
 import struct
 import socket
 
 
 def send_packet(mac_str):
-    """
-    Send magic packet for wol (wake-on-lane) to given mac address
-    See more here: https://en.wikipedia.org/wiki/Wake-on-LAN
+    """Send magic packet to given mac address
     :param mac_str: mac address string separated by :
     :return:
     """
