@@ -34,6 +34,7 @@ optional arguments:
 ### wol.py
 Send a [WOL](https://en.wikipedia.org/wiki/Wake-on-LAN)(Wake-on-LAN) packet to a given MAC address. Used to start my PC remotely.
 ```bash
+> python wol.py -h
 usage: Send WOL magic packet to MAC [-h] mac
 
 positional arguments:
@@ -41,4 +42,19 @@ positional arguments:
 
 optional arguments:
   -h, --help  show this help message and exit
+> python wol.py 5e:00:70:22:68:00
+```
+### osx_notify.py
+Emit OSX notification with custom title and content. Used together with cron to remind myself to leave chair and do some exercise.
+```bash
+> python osx_notify.py -h
+usage: Emit OSX notification with custom title and content.
+
+positional arguments:
+  title       Title of the notification
+  content     Content of the notification
+
+optional arguments:
+  -h, --help  show this help message and exit
+> python osx_notify.py title content
 ```
