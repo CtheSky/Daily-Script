@@ -4,7 +4,7 @@ Emit OSX notification with custom title and content.
 
 Command line interface:
 > python osx_notify.py -h
-usage: Send WOL magic packet to MAC [-h] title content
+usage: Emit OSX notification with custom title and content.
 
 positional arguments:
   title       Title of the notification
