@@ -26,7 +26,7 @@ def notify(title, content):
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser('Send WOL magic packet to MAC')
+    parser = argparse.ArgumentParser('Emit OSX notification with custom title and content')
     parser.add_argument('title', help='Title of the notification')
     parser.add_argument('content', help='Content of the notification')
 
