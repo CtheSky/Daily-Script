@@ -58,3 +58,14 @@ optional arguments:
   -h, --help  show this help message and exit
 > python osx_notify.py title content
 ```
+
+### debian_shadowsocks.py
+```bash
+> python debian_shadowsocks.py -h
+usage: Read ssh config, connect to the remote, install packages and setup shadowsocks server. (Only work for debian now)
+       [-h] [--host HOST]
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --host HOST  host configured in .ssh/config file
+```
