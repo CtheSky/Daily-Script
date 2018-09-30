@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import paramiko
 
 
@@ -62,8 +63,6 @@ def install_packages(client):
 
 
 def config_and_setup_server(client):
-    cmd_tpl = 'sudo ssserver -s {server_address} -p {server_port} -k {password} -m {method} -d start'
-
     class Option:
         def __init__(self, name, default):
             self.name = name
@@ -74,7 +73,7 @@ def config_and_setup_server(client):
         Option(name='server_address', default='127.0.0.1'),
         Option(name='server_port', default='2333'),
         Option(name='password', default='123456'),
-        Option(name='method', default='aes-256-cfb')
+        Option(name='method', default='aes-256-cfb'),
     ]
 
     while True:
@@ -82,13 +81,21 @@ def config_and_setup_server(client):
         for option in options:
             option.value = input('Option name : [{}], Default value: [{}]\n'.format(option.name, option.default))
 
-        kwargs = {option.name: option.default if not option.value else option.value for option in options}
-        cmd = cmd_tpl.format(**kwargs)
+        config = {option.name: option.default if not option.value else option.value for option in options}
+        config_str = json.dumps(config, indent=4)
 
-        y_or_n = input('Is [{}] correct? [Y/n]'.format(cmd))
+        print(config_str)
+
+        y_or_n = input('Is config above correct? [Y/n]')
         if not y_or_n or y_or_n.lower() in ['y', 'yes']:
-            client.exec_command(cmd)
-            sys.exit(0)
+
+            cmd_to_create_config_file = 'echo \'{}\' > shadowsocks.json'.format(config_str)
+            exec_command_and_print_stdout(client, cmd_to_create_config_file)
+
+            cmd_to_start_server_daemon = 'sudo ssserver -c shadowsocks.json -d start'
+            exec_command_and_print_stdout(client, cmd_to_start_server_daemon)
+
+            break
 
 
 def main():
