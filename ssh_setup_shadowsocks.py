@@ -42,7 +42,7 @@ def exec_command_and_print_stdout(client, command):
     print(command)
     print('Command Output'.center(50, '='))
 
-    _, stdout, stderr = client.exec_command(command)
+    stdin, stdout, stderr = client.exec_command(command)
 
     while not stdout.channel.exit_status_ready() or stdout.channel.recv_ready():
         output = stdout.channel.recv(1024)
@@ -51,12 +51,29 @@ def exec_command_and_print_stdout(client, command):
 
 def install_packages(client):
     """install necessary packages"""
-    commands = [
-        'sudo apt-get -y update',
-        'sudo apt-get -y install git',
-        'sudo apt-get -y install python-pip',
-        'sudo pip install git+https://github.com/shadowsocks/shadowsocks.git@master'
-    ]
+
+    def is_cmd_ok(cmd):
+        stdin, stdout, stderr = client.exec_command(cmd)
+        return stdout.channel.recv_exit_status() == 0
+
+    if is_cmd_ok('sudo apt-get -h'):
+        commands = [
+            'sudo apt-get -y update',
+            'sudo apt-get -y install git',
+            'sudo apt-get -y install python-pip',
+            'sudo pip install git+https://github.com/shadowsocks/shadowsocks.git@master'
+        ]
+    elif is_cmd_ok('sudo yum -h'):
+        commands = [
+            'sudo yum -y install epel-release',
+            'sudo yum -y update',
+            'sudo yum -y install git',
+            'sudo yum -y install python-pip',
+            'sudo pip install git+https://github.com/shadowsocks/shadowsocks.git@master'
+        ]
+    else:
+        print('No available package manager found')
+        sys.exit(1)
 
     for cmd in commands:
         exec_command_and_print_stdout(client, cmd)
