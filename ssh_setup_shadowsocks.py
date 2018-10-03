@@ -1,3 +1,6 @@
+"""
+Read ssh config, connect to the remote, install packages and setup shadowsocks server.
+"""
 import os
 import sys
 import json
@@ -119,7 +122,7 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser('Read ssh config, connect to the remote, '
-                                     'install packages and setup shadowsocks server. (Only work for debian now)')
+                                     'install packages and setup shadowsocks server.')
     parser.add_argument('--host', help='host configured in .ssh/config file')
 
     args = parser.parse_args()
