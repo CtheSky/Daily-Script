@@ -59,10 +59,12 @@ optional arguments:
 > python osx_notify.py title content
 ```
 
-### debian_shadowsocks.py
+### ssh_setup_shadowsocks.py.py
+I use shadowsocks to cross the GFW, when my server is detected or blocked I have to setup a new one. With this script, I create a new vm, config ssh and run it. It will install required packages, ask server config interactively and setup server.
+It's been tested on centos 7, ubuntu 16.04 and debian 9.
 ```bash
-> python debian_shadowsocks.py -h
-usage: Read ssh config, connect to the remote, install packages and setup shadowsocks server. (Only work for debian now)
+> python ssh_setup_shadowsocks.py.py -h
+usage: Read ssh config, connect to the remote, install packages and setup shadowsocks server.
        [-h] [--host HOST]
 
 optional arguments:
